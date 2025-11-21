@@ -1,0 +1,72 @@
+services:
+
+  yii2-app:
+    image: yiisoftware/yii2-php:8.2-apache
+    container_name: yii2_app
+    volumes:
+      - ./yii2app:/app
+    working_dir: /app
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      memcached:
+        condition: service_started  # memcached не имеет healthcheck по умолчанию
+    environment:
+      DB_HOST: mysql
+      DB_NAME: testdb
+      DB_USER: testuser
+      DB_PASS: testpass
+
+    command: >
+      sh -c "
+        if [ ! -f composer.json ]; then
+          composer create-project --prefer-dist yiisoft/yii2-app-basic . &&
+          chmod -R 777 runtime web/assets
+        fi &&
+        apache2-foreground
+      "
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      PMA_ARBITRARY: 0
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  memcached:
+    image: memcached:1.6-alpine
+    container_name: memcached_server
+    ports:
+      - "11211:11211"
+    command: memcached -m 64 
+
+volumes:
+  mysql_data:
