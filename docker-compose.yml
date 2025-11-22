@@ -1,7 +1,8 @@
 services:
 
   yii2-app:
-    image: yiisoftware/yii2-php:8.2-apache
+    build: .
+    # image: yiisoftware/yii2-php:8.2-apache
     container_name: yii2_app
     volumes:
       - ./yii2app:/app
