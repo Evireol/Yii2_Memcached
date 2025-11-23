@@ -50,3 +50,10 @@ http://localhost:8080/index.php?r=api/view&id=1763902144
 {"id":1763902144,"text":"забрать документы","created_at":"2025-11-23 12:49:04"}
 ~~~
 
+
+### Изменение статуса задачи
+
+~~~
+\yii2\yii2app> curl.exe -X POST "http://localhost:8080/index.php?r=api/update-status&id=1763902892" -d "status=completed"
+~~~
+
