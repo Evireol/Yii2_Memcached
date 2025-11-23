@@ -17,8 +17,8 @@ $config = [
             'cookieValidationKey' => 'ZbNSaXdWyEf40qFHuoAuCdRGmyPUiIZr',
         ],
         'cache' => [
-            'class' => 'yii\caching\MemCache', // ← правильно!
-            'useMemcached' => true,            // обязательно, если используете расширение memcached
+            'class' => 'yii\caching\MemCache', //  правильно!
+            'useMemcached' => true,            
             'servers' => [
                 [
                     'host' => 'memcached',
