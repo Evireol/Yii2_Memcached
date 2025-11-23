@@ -12,10 +12,23 @@ http://localhost:8080/index.php?r=cache
 Обращене по API к списку дел
 -------------------
 
+### Отправка в список
+
 ~~~
 PS C:\Users\Ev\Desktop\opt\compose\yii2\yii2app> curl.exe -X POST http://localhost:8080/index.php?r=api/add-todo -d "text=Купить хлеб"
 {"success":true,"task":{"id":1763858311,"text":"Купить хлеб","created_at":"2025-11-23 00:38:31"}}
 ~~~
 
 <img width="1081" height="42" alt="image" src="https://github.com/user-attachments/assets/3e614e06-3645-491c-a100-f8baa16c225d" />
+
+
+### Получение списка всех задач
+
+~~~
+http://localhost:8080/index.php?r=api/list
+~~~
+
+~~~
+[{"id":1763858311,"text":"Купить хлеб","created_at":"2025-11-23 00:38:31"},{"id":1763898846,"text":"заправить машину","created_at":"2025-11-23 11:54:06"}]
+~~~
 

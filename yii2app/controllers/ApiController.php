@@ -10,8 +10,9 @@ class ApiController extends Controller
 {
     public function beforeAction($action)
     {
-        $this->enableCsrfValidation = false;
-
+        if (in_array($action->id, ['add-todo', 'list'])) {
+            $this->enableCsrfValidation = false;
+        }
         Yii::$app->response->format = Response::FORMAT_JSON;
         return parent::beforeAction($action);
     }
@@ -19,26 +20,19 @@ class ApiController extends Controller
     public function actionAddTodo()
     {
         $request = Yii::$app->request;
-
         if (!$request->isPost) {
             return ['error' => 'Only POST allowed'];
         }
-
         $text = trim($request->post('text'));
-
         if (empty($text)) {
             return ['error' => 'Field "text" is required'];
         }
-
-        $task = Todo::add($text);
-
         return [
             'success' => true,
-            'task' => $task,
+            'task' => Todo::add($text),
         ];
     }
 
-    // Опционально: получить список задач
     public function actionList()
     {
         return Todo::getAll();
