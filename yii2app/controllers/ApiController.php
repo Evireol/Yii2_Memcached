@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 use app\models\Todo;
+use yii\web\NotFoundHttpException;
 
 class ApiController extends Controller
 {
@@ -19,75 +20,52 @@ class ApiController extends Controller
 
     public function actionAddTodo()
     {
-        $request = Yii::$app->request;
-        if (!$request->isPost) {
-            return ['error' => 'Only POST allowed'];
+        $todo = new Todo();
+        $todo->load(Yii::$app->request->post(), '');
+        if ($todo->validate()) {
+            $todo->save();
+            return ['success' => true, 'task' => $todo];
         }
-        $text = trim($request->post('text'));
-        if (empty($text)) {
-            return ['error' => 'Field "text" is required'];
-        }
-        return [
-            'success' => true,
-            'task' => Todo::add($text),
-        ];
-    }
-
-    public function actionView($id)
-    {
-        $task = Todo::getById($id);
-        if ($task === null) {
-            Yii::$app->response->statusCode = 404;
-            return ['error' => 'Task not found'];
-        }
-        return $task;
-    }
-
-    public function actionUpdateStatus($id)
-    {
-        $request = Yii::$app->request;
-        if (!$request->isPost) {
-            Yii::$app->response->statusCode = 405;
-            return ['error' => 'Only POST allowed'];
-        }
-    
-        // Пустая строка, если null
-        $status = $request->post('status', '');
-    
-        if (empty(trim($status))) {
-            Yii::$app->response->statusCode = 400;
-            return ['error' => 'Field "status" is required'];
-        }
-    
-        $status = trim($status);
-    
-        $result = Todo::updateStatus($id, $status);
-        if (isset($result['error'])) {
-            Yii::$app->response->statusCode = 400;
-            return $result;
-        }
-    
-        return $result;
-    }
-
-    public function actionDelete($id)
-    {
-        $request = Yii::$app->request;
-        if (!$request->isDelete) {
-            Yii::$app->response->statusCode = 405;
-            return ['error' => 'Only DELETE allowed'];
-        }
-    
-        $result = Todo::deleteById($id);
-        if (isset($result['error'])) {
-            Yii::$app->response->statusCode = 404;
-            return $result;
-        }
-        return $result;
+        return ['success' => false, 'errors' => $todo->errors];
     }
 
     public function actionList()
     {
-        return Todo::getAll();
+        return Todo::find()->asArray()->all();
+    }
+
+    public function actionView($id)
+    {
+        $todo = Todo::findOne($id);
+        if (!$todo) {
+            throw new NotFoundHttpException('Task not found');
+        }
+        return $todo;
+    }
+
+    public function actionUpdateStatus($id)
+    {
+        $todo = Todo::findOne($id);
+        if (!$todo) {
+            throw new NotFoundHttpException('Task not found');
+        }
+        $status = Yii::$app->request->post('status');
+        if (!in_array($status, Todo::STATUSES)) {
+            Yii::$app->response->statusCode = 400;
+            return ['error' => 'Invalid status'];
+        }
+        $todo->status = $status;
+        $todo->save(false); // false = без валидации (статус уже проверен)
+        return ['success' => true, 'task' => $todo];
+    }
+
+    public function actionDelete($id)
+    {
+        $todo = Todo::findOne($id);
+        if (!$todo) {
+            throw new NotFoundHttpException('Task not found');
+        }
+        $todo->delete();
+        return ['success' => true];
     }
 }

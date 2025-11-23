@@ -62,3 +62,64 @@ PS \yii2\yii2app> curl.exe -X POST "http://localhost:8080/index.php?r=api/update
 ~~~
 PS \yii2\yii2app> curl.exe -X delete "http://localhost:8080/index.php?r=api/delete&id=1763898846"
 ~~~
+
+
+Коннект с Базой данных (MySQL)
+-------------------
+
+### Создание миграции
+~~~
+PS \compose\yii2> docker exec -it yii2_app php yii migrate
+Yii Migration Tool (based on Yii v2.0.53)
+
+Creating migration history table "migration"...Done.
+No new migrations found. Your system is up-to-date.
+~~~
+~~~
+PS \compose\yii2> docker exec -it yii2_app php yii migrate/create create_todo_table
+Yii Migration Tool (based on Yii v2.0.53)
+
+Create new migration '/app/migrations/m251123_172737_create_todo_table.php'? (yes|no) [no]:y
+New migration created successfully.
+~~~
+~~~
+PS \compose\yii2> docker exec -it yii2_app php yii migrate
+Yii Migration Tool (based on Yii v2.0.53)
+
+Total 1 new migration to be applied:
+        m251123_172737_create_todo_table
+
+Apply the above migration? (yes|no) [no]:y
+*** applying m251123_172737_create_todo_table
+    > create table {{%todo}} ... done (time: 0.087s)
+*** applied m251123_172737_create_todo_table (time: 0.551s)
+~~~
+
+
+### Если миграция не создалась (уже есть такая БД):
+
+# Остановить и удалить контейнеры
+
+Очистка:
+~~~
+docker-compose down
+~~~
+~~~
+docker volume rm yii2_mysql_data
+~~~
+~~~
+docker-compose up -d
+~~~
+
+Воссоздание в SQL:
+~~~
+CREATE DATABASE IF NOT EXISTS testdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'testuser'@'%' IDENTIFIED BY 'testpass';
+
+GRANT ALL PRIVILEGES ON testdb.* TO 'testuser'@'%';
+
+-- Применить изменения
+FLUSH PRIVILEGES;
+
+~~~
