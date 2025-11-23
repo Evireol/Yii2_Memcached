@@ -23,4 +23,15 @@ class Todo
         $file = Yii::getAlias('@app/runtime/todo.json');
         return file_exists($file) ? json_decode(file_get_contents($file), true) : [];
     }
+
+    public static function getById($id)
+    {
+        $todos = self::getAll();
+        foreach ($todos as $todo) {
+            if (isset($todo['id']) && (string)$todo['id'] === (string)$id) {
+                return $todo;
+            }
+        }
+        return null;
+    }
 }
