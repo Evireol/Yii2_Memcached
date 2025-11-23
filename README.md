@@ -15,7 +15,7 @@ http://localhost:8080/index.php?r=cache
 ### Отправка в список
 
 ~~~
-PS C:\Users\Ev\Desktop\opt\compose\yii2\yii2app> curl.exe -X POST http://localhost:8080/index.php?r=api/add-todo -d "text=Купить хлеб"
+PS \yii2\yii2app> curl.exe -X POST http://localhost:8080/index.php?r=api/add-todo -d "text=Купить хлеб"
 {"success":true,"task":{"id":1763858311,"text":"Купить хлеб","created_at":"2025-11-23 00:38:31"}}
 ~~~
 
@@ -30,5 +30,23 @@ http://localhost:8080/index.php?r=api/list
 
 ~~~
 [{"id":1763858311,"text":"Купить хлеб","created_at":"2025-11-23 00:38:31"},{"id":1763898846,"text":"заправить машину","created_at":"2025-11-23 11:54:06"}]
+~~~
+
+### Получение конкретной задачи
+
+Создание
+~~~
+PS \yii2\yii2app> curl.exe -X POST http://localhost:8080/index.php?r=api/add-todo -d "text=забрать документы"
+{"success":true,"task":{"id":1763902144,"text":"забрать документы","created_at":"2025-11-23 12:49:04"}}
+~~~
+
+Отображение
+~~~
+http://localhost:8080/index.php?r=api/view&id=1763902144
+~~~
+
+Найдено по запросу:
+~~~
+{"id":1763902144,"text":"забрать документы","created_at":"2025-11-23 12:49:04"}
 ~~~
 

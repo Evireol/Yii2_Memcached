@@ -10,7 +10,7 @@ class ApiController extends Controller
 {
     public function beforeAction($action)
     {
-        if (in_array($action->id, ['add-todo', 'list'])) {
+        if (in_array($action->id, ['add-todo', 'list', 'view'])) {
             $this->enableCsrfValidation = false;
         }
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -32,6 +32,16 @@ class ApiController extends Controller
             'task' => Todo::add($text),
         ];
     }
+
+    public function actionView($id)
+{
+    $task = Todo::getById($id);
+    if ($task === null) {
+        Yii::$app->response->statusCode = 404;
+        return ['error' => 'Task not found'];
+    }
+    return $task;
+}
 
     public function actionList()
     {
