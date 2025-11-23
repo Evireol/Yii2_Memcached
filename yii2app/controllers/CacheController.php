@@ -14,7 +14,7 @@ class CacheController extends Controller
 
         if ($value === false) {
             $value = 'Cached at: ' . date('c');
-            Yii::$app->cache->set($key, $value, 20);
+            Yii::$app->cache->set($key, $value, 30);
         }
 
         return $this->renderContent("<h1>$value</h1>");
