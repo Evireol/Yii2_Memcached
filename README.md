@@ -123,3 +123,19 @@ GRANT ALL PRIVILEGES ON testdb.* TO 'testuser'@'%';
 FLUSH PRIVILEGES;
 
 ~~~
+
+Сохранение в кэш
+-------------------
+
+### Проверка источника полученнных данных
+
+~~~
+2025-11-23 21:07:57 [172.18.0.1][-][-][info][yii\db\Command::execute] INSERT INTO `todo` (`text`) VALUES ('сгрупировать задачи')
+    in /app/controllers/ApiController.php:34
+
+2025-11-23 21:08:01 [172.18.0.1][-][-][info][app\controllers\ApiController::actionList] Cache MISS: loading from DB
+    in /app/controllers/ApiController.php:48
+
+2025-11-23 21:08:03 [172.18.0.1][-][-][info][app\controllers\ApiController::actionList] Cache HIT: loaded from cache
+    in /app/controllers/ApiController.php:52
+~~~
