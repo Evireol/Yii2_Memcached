@@ -54,6 +54,11 @@ http://localhost:8080/index.php?r=api/view&id=1763902144
 ### Изменение статуса задачи
 
 ~~~
-\yii2\yii2app> curl.exe -X POST "http://localhost:8080/index.php?r=api/update-status&id=1763902892" -d "status=completed"
+PS \yii2\yii2app> curl.exe -X POST "http://localhost:8080/index.php?r=api/update-status&id=1763902892" -d "status=completed"
 ~~~
 
+### Удаление задачи
+
+~~~
+PS \yii2\yii2app> curl.exe -X delete "http://localhost:8080/index.php?r=api/delete&id=1763898846"
+~~~

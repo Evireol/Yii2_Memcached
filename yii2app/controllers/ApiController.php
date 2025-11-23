@@ -10,7 +10,7 @@ class ApiController extends Controller
 {
     public function beforeAction($action)
     {
-        if (in_array($action->id, ['add-todo', 'list', 'view', 'update-status'])) {
+        if (in_array($action->id, ['add-todo', 'list', 'view', 'update-status', 'delete'])) {
             $this->enableCsrfValidation = false;
         }
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -67,6 +67,22 @@ class ApiController extends Controller
             return $result;
         }
     
+        return $result;
+    }
+
+    public function actionDelete($id)
+    {
+        $request = Yii::$app->request;
+        if (!$request->isDelete) {
+            Yii::$app->response->statusCode = 405;
+            return ['error' => 'Only DELETE allowed'];
+        }
+    
+        $result = Todo::deleteById($id);
+        if (isset($result['error'])) {
+            Yii::$app->response->statusCode = 404;
+            return $result;
+        }
         return $result;
     }
 

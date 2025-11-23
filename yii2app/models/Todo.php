@@ -70,4 +70,32 @@ class Todo
         return ['success' => true, 'task' => $todo];
     }
 
+    public static function deleteById($id)
+    {
+        $file = Yii::getAlias('@app/runtime/todo.json');
+        if (!file_exists($file)) {
+            return ['error' => 'No tasks found'];
+        }
+
+        $todos = json_decode(file_get_contents($file), true);
+        $filtered = [];
+        $found = false;
+
+        foreach ($todos as $todo) {
+            if ((string)$todo['id'] === (string)$id) {
+                $found = true;
+                continue; // пропускаем — удаляем
+            }
+            $filtered[] = $todo;
+        }
+
+        if (!$found) {
+            return ['error' => 'Task not found'];
+        }
+
+        // Сохраняем обновлённый список
+        file_put_contents($file, json_encode($filtered, JSON_PRETTY_PRINT));
+        return ['success' => true];
+    }
+
 }
