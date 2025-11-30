@@ -1,33 +1,22 @@
 services:
 
   yii2-app:
-    # build: .
-    image: yiisoftware/yii2-php:8.2-apache
+    build: .                     # всегда используем build
     container_name: yii2_app
     volumes:
       - ./yii2app:/app
-    working_dir: /app
     ports:
       - "8080:80"
     depends_on:
       mysql:
         condition: service_healthy
       memcached:
-        condition: service_started  # memcached не имеет healthcheck по умолчанию
+        condition: service_started
     environment:
       DB_HOST: mysql
       DB_NAME: testdb
       DB_USER: testuser
       DB_PASS: testpass
-
-    command: >
-      sh -c "
-        if [ ! -f composer.json ]; then
-          composer create-project --prefer-dist yiisoft/yii2-app-basic . &&
-          chmod -R 777 runtime web/assets
-        fi &&
-        apache2-foreground
-      "
 
   mysql:
     image: mysql:8.0
