@@ -7,27 +7,6 @@
 PS \yii2> docker-compose up
 ~~~
 
-После смена в файле docker-compose.yml с 
-
-~~~
-    # build: .
-    image: yiisoftware/yii2-php:8.2-apache
-~~~
-
-на  
-
-~~~
-    build: .
-    # image: yiisoftware/yii2-php:8.2-apache
-~~~
-
-    и запуск команды 
-
-~~~
-    docker-compose down
-    docker-compose up --build -d
-~~~
-
 Далее:
 
 ~~~
