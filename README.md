@@ -1,4 +1,4 @@
-Устнановка
+Установка
 -------------------
 
 ### Порядок сборки
@@ -20,6 +20,7 @@ PS \yii2> docker-compose up
     build: .
     # image: yiisoftware/yii2-php:8.2-apache
 ~~~
+
     и запуск команды 
 
 ~~~
