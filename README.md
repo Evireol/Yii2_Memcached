@@ -34,6 +34,14 @@ PS \yii2> docker-compose up
 docker exec yii2_app composer install
 ~~~
 
+### Применение миграции и загрузка тестовых данных
+~~~
+docker exec yii2_app php yii migrate --interactive=0
+
+docker exec yii2_app php yii seed
+~~~
+
+
 Проверка Memcache
 -------------------
 (Кэширование на 30 секунд)
