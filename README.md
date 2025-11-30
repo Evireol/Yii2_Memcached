@@ -1,3 +1,38 @@
+Устнановка
+-------------------
+
+### Порядок сборки
+
+~~~
+PS \yii2> docker-compose up
+~~~
+
+После смена в файле docker-compose.yml с 
+
+~~~
+    # build: .
+    image: yiisoftware/yii2-php:8.2-apache
+~~~
+
+на  
+
+~~~
+    build: .
+    # image: yiisoftware/yii2-php:8.2-apache
+~~~
+    и запуск команды 
+
+~~~
+    docker-compose down
+    docker-compose up --build -d
+~~~
+
+Далее:
+
+~~~
+docker exec yii2_app composer install
+~~~
+
 Проверка Memcache
 -------------------
 (Кэширование на 30 секунд)
