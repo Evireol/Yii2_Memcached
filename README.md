@@ -187,3 +187,14 @@ Body-raw:
   }
 }
 ~~~
+Вид запроса - и успешный ответ:
+
+<img width="769" height="877" alt="image" src="https://github.com/user-attachments/assets/6923a188-9f4d-4a37-9fad-bbd2cee39e03" />
+
+Визуализация в Kibana:
+(Discover)
+<img width="1228" height="352" alt="image" src="https://github.com/user-attachments/assets/16153c7f-a768-4f60-bb8a-b30dc2dbe182" />
+
+(Visualize)
+<img width="874" height="736" alt="image" src="https://github.com/user-attachments/assets/c70db91b-20bd-41fb-b651-f064d9ae12f3" />
+
