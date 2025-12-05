@@ -20,6 +20,11 @@ docker exec yii2_app php yii migrate --interactive=0
 docker exec yii2_app php yii seed
 ~~~
 
+### Установка зависимостей для ELK 
+~~~
+docker exec yii2_app composer require yiisoft/yii2-elasticsearch
+composer require elasticsearch/elasticsearch:^8.0
+~~~
 
 Проверка Memcache
 -------------------
@@ -161,4 +166,24 @@ FLUSH PRIVILEGES;
 
 2025-11-23 21:08:03 [172.18.0.1][-][-][info][app\controllers\ApiController::actionList] Cache HIT: loaded from cache
     in /app/controllers/ApiController.php:52
+~~~
+
+Обращение к Search
+-------------------
+## Отправка в индекс
+POST http://localhost:9200/test-index/_doc
+
+~~~
+Header: Content-Type application/json
+~~~
+~~~
+Body-raw: 
+{
+  "message": "Hello from test index",
+  "timestamp": "2025-12-05T10:00:00Z",
+  "user": {
+    "name": "Joana",
+    "id": 123
+  }
+}
 ~~~
