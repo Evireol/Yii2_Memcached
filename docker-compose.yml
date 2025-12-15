@@ -1,7 +1,8 @@
-services:
+version: '3.8'
 
+services:
   yii2-app:
-    build: .                     # всегда используем build
+    build: .
     container_name: yii2_app
     volumes:
       - ./yii2app:/app
@@ -12,11 +13,14 @@ services:
         condition: service_healthy
       memcached:
         condition: service_started
+      elasticsearch:
+        condition: service_healthy
     environment:
       DB_HOST: mysql
       DB_NAME: testdb
       DB_USER: testuser
       DB_PASS: testpass
+      ES_HOST: elasticsearch
 
   mysql:
     image: mysql:8.0
@@ -27,8 +31,8 @@ services:
       MYSQL_USER: testuser
       MYSQL_PASSWORD: testpass
     volumes:
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_:/var/lib/mysql 
     command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -57,7 +61,41 @@ services:
     container_name: memcached_server
     ports:
       - "11211:11211"
-    command: memcached -m 64 
+    command: memcached -m 64
+
+  elasticsearch:
+    image: elasticsearch:8.11.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: kibana:8.11.3
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
 
 volumes:
-  mysql_data:
+  mysql_:
+  es_data:
