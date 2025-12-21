@@ -188,3 +188,8 @@ Body-raw:
   }
 }
 ~~~
+
+Отображеине в Kibana (интрефейс к ElasticSearch)
+---------------------
+Поиск: Discover -> Поиск по условию и фильтры
+Визуализация: Visualize Library -> [Create new visualization] -> Lens => Отображеиен графиков и соотношений с цифрами 
